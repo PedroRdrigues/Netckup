@@ -1,4 +1,6 @@
+import os
 import socket
+
 
 HOST = "192.168.100.73"
 PORT = 5500
@@ -9,13 +11,28 @@ CLIENT.connect((HOST, PORT)); print("Conectado...\n")
 req = str(input(">>> "))
 CLIENT.send(req.encode())
 
-with open(req, "wb") as file:
-  while True:
-    data = CLIENT.recv(1_000_000)
-    
-    if not data:
-      break
-    
-    file.write(data)
-    
-print(f">>> {req} recebido...")
+dt = []
+while True:
+  d = CLIENT.recv(1_000_000)
+  print(d)
+  if not d:
+    break
+  
+  dt.append(d)
+print(dt,)
+if not dt == []:
+  with open(req, "wb") as file:
+    for i in range(len(dt)):
+      data = dt[i]
+      
+      print(data)
+      print(i)
+      
+      if not data:
+        break
+      
+      file.write(data)
+      i+=1
+      
+    if os.path.exists(req):
+      print(f">>> {req} recebido...")

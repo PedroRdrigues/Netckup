@@ -1,3 +1,4 @@
+import os
 import socket
 
 HOST = "192.168.100.73"
@@ -11,10 +12,15 @@ conn , addrs = SERVER.accept()
 
 res = conn.recv(1024).decode()
 
-with open(res, 'rb') as file:
-  for data in file.readlines():
-    conn.send(data)
+if os.path.isfile(res):
+  with open(res, 'rb') as file:
+    for data in file.readlines():
+      conn.send(data)
     
-  print(f"{res} enviado...")
+    print(f"{res} enviado...")
+
+else:
+  print("isso é um diretório!")
+
 
 print("Fim...")
