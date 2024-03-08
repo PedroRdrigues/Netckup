@@ -14,19 +14,15 @@ CLIENT.send(req.encode())
 dt = []
 while True:
   d = CLIENT.recv(1_000_000)
-  print(d)
   if not d:
     break
   
   dt.append(d)
-print(dt,)
+
 if not dt == []:
   with open(req, "wb") as file:
     for i in range(len(dt)):
       data = dt[i]
-      
-      print(data)
-      print(i)
       
       if not data:
         break
@@ -36,3 +32,8 @@ if not dt == []:
       
     if os.path.exists(req):
       print(f">>> {req} recebido...")
+
+else:
+  print('>>> isso é um diretório!')
+  
+input(">>> ")
