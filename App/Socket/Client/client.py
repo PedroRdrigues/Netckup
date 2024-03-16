@@ -1,39 +1,63 @@
 import os
 import socket
+import threading
 
 
-HOST = "192.168.100.73"
-PORT = 5500
+# Tenta fazer a conexão no servidor e pede o que deve ser requisitado.
+def main():
+  HOST = "192.168.100.73"
+  PORT = 50501
 
-CLIENT = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-CLIENT.connect((HOST, PORT)); print("Conectado...\n")
+  client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-req = str(input(">>> "))
-CLIENT.send(req.encode())
-
-dt = []
-while True:
-  d = CLIENT.recv(1_000_000)
-  if not d:
-    break
+  try:
+    client.connect((HOST, PORT)); print("Conectado...\n")
+  except:
+    print("Não foi possivel se conectar ao sevidor.\n")
+    
+    
+    
+# Envia a requisição para o servidor.
+def send(client, req):
+  try:
+    print(f">>> {req} sendo requisitado.\n")
+    
+    client.send(req.encode())
+    
+  except:
+    return
   
-  dt.append(d)
-
-if not dt == []:
-  with open(req, "wb") as file:
-    for i in range(len(dt)):
-      data = dt[i]
-      
-      if not data:
-        break
-      
-      file.write(data)
-      i+=1
-      
-    if os.path.exists(req):
-      print(f">>> {req} recebido...")
-
-else:
-  print('>>> isso é um diretório!')
+# Recebe a resposta do servidor.
+def receive(client, res):
+  dt = []
   
-input(">>> ")
+  while True:
+    d = client.recv(1_000_000)
+  
+    if not d:
+      break
+      
+    dt.append(d)
+
+  if not dt == []:
+    with open(res, "wb") as file:
+      for i in range(len(dt)):
+        data = dt[i]
+        
+        if not data:
+          break
+        
+        file.write(data)
+        
+      if os.path.exists(res):
+        print(f">>> '{res}' recebido.\n")
+
+  else:
+    print('>>> Não foi possivel localizar o item requisitado.\n')
+
+
+
+
+
+
+main()
